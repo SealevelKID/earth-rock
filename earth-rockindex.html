@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>國小自然：大地探險家</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="earth-rockstyle.css">
+</head>
+
+<body class="text-gray-800 min-h-screen flex flex-col">
+
+    <header class="bg-blue-600 text-white p-4 shadow-md flex justify-between items-center z-10 shrink-0">
+        <div class="flex items-center gap-3">
+            <i class="fas fa-globe-asia text-3xl text-green-300"></i>
+            <h1 class="text-2xl font-black tracking-wider">國小自然：大地探險家</h1>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <button id="btn-back-map"
+                class="hidden bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-lg font-bold shadow transition flex items-center gap-2">
+                <i class="fas fa-map"></i> 返回地圖
+            </button>
+            <button id="btn-finish-mission" onclick="verifyAllProgress()"
+                class="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded-lg font-bold shadow transition flex items-center gap-2">
+                <i class="fas fa-flag-checkered"></i> 檢測關卡
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-grow overflow-x-hidden p-4 md:p-8 relative">
+
+        <section id="screen-map" class="screen active max-w-5xl mx-auto">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-blue-800 mb-2">歡迎來到大地探險家！</h2>
+                <p class="text-lg text-gray-600">請選擇一個觀測站開始你的探險，解開地球的奧祕。</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="level-card flex flex-col items-center text-center" onclick="navTo('screen-level-1')">
+                    <div
+                        class="bg-blue-100 text-blue-600 w-20 h-20 rounded-full flex items-center justify-center text-4xl mb-4">
+                        <i class="fas fa-mountain"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">關卡一：創世觀測站</h3>
+                    <p class="text-gray-500 mb-4">地表環境組成與改變地貌的重要力量。</p>
+                    <button
+                        class="mt-auto bg-blue-500 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-600 w-full">進入觀測</button>
+                </div>
+
+                <div class="level-card flex flex-col items-center text-center" onclick="navTo('screen-level-2')">
+                    <div
+                        class="bg-cyan-100 text-cyan-600 w-20 h-20 rounded-full flex items-center justify-center text-4xl mb-4">
+                        <i class="fas fa-water"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">關卡二：水神雕刻坊</h3>
+                    <p class="text-gray-500 mb-4">探索流水與波浪如何雕刻出多變的地形。</p>
+                    <button
+                        class="mt-auto bg-cyan-500 text-white px-6 py-2 rounded-full font-bold hover:bg-cyan-600 w-full">進入實驗</button>
+                </div>
+
+                <div class="level-card flex flex-col items-center text-center" onclick="navTo('screen-level-3')">
+                    <div
+                        class="bg-amber-100 text-amber-600 w-20 h-20 rounded-full flex items-center justify-center text-4xl mb-4">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">關卡三：尋寶礦坑與化石谷</h3>
+                    <p class="text-gray-500 mb-4">認識岩石分類、礦物特徵以及化石的祕密。</p>
+                    <button
+                        class="mt-auto bg-amber-500 text-white px-6 py-2 rounded-full font-bold hover:bg-amber-600 w-full">開始尋寶</button>
+                </div>
+
+                <div class="level-card flex flex-col items-center text-center" onclick="navTo('screen-level-4')">
+                    <div
+                        class="bg-red-100 text-red-600 w-20 h-20 rounded-full flex items-center justify-center text-4xl mb-4">
+                        <i class="fas fa-house-damage"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">關卡四：守護者基地</h3>
+                    <p class="text-gray-500 mb-4">認識天然災害、地震避難防災與地景保育。</p>
+                    <button
+                        class="mt-auto bg-red-500 text-white px-6 py-2 rounded-full font-bold hover:bg-red-600 w-full">成為守護者</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="screen-level-1" class="screen max-w-5xl mx-auto flex flex-col">
+            <div
+                class="flex flex-col md:flex-row md:justify-between md:items-end border-b-4 border-blue-500 pb-2 mb-4 gap-4 shrink-0">
+                <h2 class="text-2xl font-bold text-blue-800"><i class="fas fa-mountain mr-2"></i>創世觀測站</h2>
+                <div class="flex gap-2">
+                    <button onclick="switchTab(1)" id="tab-btn-1"
+                        class="bg-blue-500 text-white px-4 py-2 rounded-t-lg font-bold transition">任務 1-1：臺灣誕生</button>
+                    <button onclick="switchTab(2)" id="tab-btn-2"
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-600 px-4 py-2 rounded-t-lg font-bold transition shadow-inner">任務
+                        1-2：地貌魔法師</button>
+                </div>
+            </div>
+
+            <div id="task-1-1"
+                class="bg-white rounded-b-xl rounded-tl-xl p-6 shadow-md flex-1 flex flex-col md:flex-row gap-8 min-h-[450px]">
+
+                <div
+                    class="w-full md:w-2/3 relative bg-blue-50 border-2 border-gray-300 rounded-lg overflow-hidden flex flex-col justify-end">
+                    <div id="layer-5"
+                        class="absolute w-full h-[20%] bg-green-500 bottom-[80%] transition-opacity duration-700 opacity-0 flex flex-col items-center justify-center font-bold text-white shadow-inner z-50">
+                        <span class="text-2xl">現代：河流沖積平原</span>
+                        <span class="text-base font-normal">（泥沙堆積、人類都市）</span>
+                    </div>
+                    <div id="layer-4"
+                        class="absolute w-full h-[20%] bg-gray-600 bottom-[60%] transition-opacity duration-700 opacity-0 flex flex-col items-center justify-center font-bold text-white shadow-inner z-40">
+                        <span class="text-2xl">蓬萊造山運動</span>
+                        <span class="text-base font-normal">（板塊擠壓，形成中央山脈）</span>
+                    </div>
+                    <div id="layer-3"
+                        class="absolute w-full h-[20%] bg-teal-300 bottom-[40%] transition-opacity duration-700 opacity-0 flex flex-col items-center justify-center font-bold text-teal-900 shadow-inner z-30">
+                        <span class="text-2xl">淺海珊瑚礁誕生</span>
+                        <span class="text-base font-normal">（溫暖清澈淺海，形成石灰岩）</span>
+                    </div>
+                    <div id="layer-2"
+                        class="absolute w-full h-[20%] bg-red-700 bottom-[20%] transition-opacity duration-700 opacity-0 flex flex-col items-center justify-center font-bold text-white shadow-inner z-20">
+                        <span class="text-2xl">海底火山噴發</span>
+                        <span class="text-base font-normal">（岩漿冷卻形成火成岩）</span>
+                    </div>
+                    <div id="layer-1"
+                        class="absolute w-full h-[20%] bg-blue-900 bottom-0 flex flex-col items-center justify-center font-bold text-white shadow-inner z-10">
+                        <span class="text-2xl">古海洋沉積層</span>
+                        <span class="text-base font-normal mt-1">（深海泥沙累積的沉積岩）</span>
+                    </div>
+                </div>
+
+                <div
+                    class="w-full md:w-1/3 flex flex-col justify-center items-center bg-gray-50 rounded-lg border-2 border-dashed border-gray-300 p-4">
+                    <h3 class="text-lg font-bold text-gray-700 mb-2 text-center">時光控制台</h3>
+                    <p class="text-xs text-gray-500 mb-6 text-center">請由下往上滑動拉桿</p>
+
+                    <div class="flex h-[240px] items-center justify-center gap-6 pl-2">
+
+                        <div class="relative h-full w-8 flex items-center justify-center">
+                            <input type="range" min="1" max="5" value="1"
+                                class="absolute origin-center -rotate-90 cursor-pointer" style="width: 240px;"
+                                id="time-slider" oninput="updateTimeMachine(this.value)">
+                        </div>
+
+                        <div class="flex flex-col justify-between h-full text-sm font-bold text-gray-500 py-[6px]">
+                            <span>現代平原</span>
+                            <span>造山運動</span>
+                            <span>珊瑚礁</span>
+                            <span>火山島</span>
+                            <span>古海洋</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="task-1-2"
+                class="hidden bg-white rounded-b-xl rounded-tl-xl p-6 shadow-md flex-1 flex flex-col md:flex-row gap-8 min-h-[450px]">
+
+                <div class="w-full md:w-2/3 flex flex-col gap-4">
+                    <h3 class="text-xl font-bold text-gray-700 mb-2">任務 1-2：地貌魔法師</h3>
+                    <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="border-4 border-dashed border-green-400 rounded-xl p-4 flex flex-col items-center cursor-pointer transition hover:bg-green-50 h-full"
+                            onclick="placeForce('nature')" ondragover="allowDrop(event)" ondrop="drop(event, 'nature')">
+                            <h4 class="font-bold text-green-600 mb-4 text-lg"><i class="fas fa-leaf"></i> 自然的力量</h4>
+                            <div id="zone-nature"
+                                class="flex flex-col gap-3 w-full text-center flex-1 overflow-y-auto p-2"></div>
+                        </div>
+                        <div class="border-4 border-dashed border-orange-400 rounded-xl p-4 flex flex-col items-center cursor-pointer transition hover:bg-orange-50 h-full"
+                            onclick="placeForce('human')" ondragover="allowDrop(event)" ondrop="drop(event, 'human')">
+                            <h4 class="font-bold text-orange-600 mb-4 text-lg"><i class="fas fa-hard-hat"></i> 人為的力量
+                            </h4>
+                            <div id="zone-human"
+                                class="flex flex-col gap-3 w-full text-center flex-1 overflow-y-auto p-2"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="w-full md:w-1/3 flex flex-col bg-gray-50 rounded-lg border-2 border-dashed border-gray-300 p-4">
+                    <h3 class="text-lg font-bold text-gray-700 mb-2 text-center">力量卡片庫</h3>
+                    <p class="text-xs text-gray-500 mb-4 text-center">點擊查看說明，再點擊(或拖曳至)左側分類。</p>
+
+                    <div class="grid grid-cols-2 gap-2 overflow-y-auto pr-2 pb-2 content-start" id="force-cards">
+                        <div id="card-eq" draggable="true" data-type="nature" data-desc="引起地表破裂、山崩、地層錯動，瞬間大幅改變地表樣貌。"
+                            class="bg-white px-3 py-2 rounded-lg font-bold cursor-pointer border-2 border-gray-300 force-card shadow-sm text-center text-sm hover:border-blue-400 transition-colors">
+                            地震</div>
+                        <div id="card-vol" draggable="true" data-type="nature" data-desc="噴發的岩漿冷卻後形成火山錐或島嶼，火山灰會掩埋周遭地表。"
+                            class="bg-white px-3 py-2 rounded-lg font-bold cursor-pointer border-2 border-gray-300 force-card shadow-sm text-center text-sm hover:border-blue-400 transition-colors">
+                            火山爆發</div>
+                        <div id="card-ty" draggable="true" data-type="nature" data-desc="帶來狂風與強降雨，容易在山區引發土石流，在海岸造成強烈侵蝕。"
+                            class="bg-white px-3 py-2 rounded-lg font-bold cursor-pointer border-2 border-gray-300 force-card shadow-sm text-center text-sm hover:border-blue-400 transition-colors">
+                            颱風</div>
+                        <div id="card-rain" draggable="true" data-type="nature"
+                            data-desc="長期沖刷地表，上游侵蝕切割出V形谷，下游泥沙堆積形成平原。"
+                            class="bg-white px-3 py-2 rounded-lg font-bold cursor-pointer border-2 border-gray-300 force-card shadow-sm text-center text-sm hover:border-blue-400 transition-colors">
+                            降雨與河流</div>
+                        <div id="card-tsu" draggable="true" data-type="nature"
+                            data-desc="巨大的海浪瞬間沖刷海岸，強大的破壞力會改變海岸線與周遭地形。"
+                            class="bg-white px-3 py-2 rounded-lg font-bold cursor-pointer border-2 border-gray-300 force-card shadow-sm text-center text-sm hover:border-blue-400 transition-colors">
+                            海嘯</div>
+
+                        <div id="card-dig" draggable="true" data-type="human" data-desc="為了建築或開路挖除山坡地，破壞水土保持，大雨時易引發山崩。"
+                            class="bg-white px-3 py-2 rounded-lg font-bold cursor-pointer border-2 border-gray-300 force-card shadow-sm text-center text-sm hover:border-blue-400 transition-colors">
+                            開挖地表</div>
+                        <div id="card-sea" draggable="true" data-type="human"
+                            data-desc="將廢土或泥沙填入海洋，雖然增加陸地面積，但會破壞原有海岸生態。"
+                            class="bg-white px-3 py-2 rounded-lg font-bold cursor-pointer border-2 border-gray-300 force-card shadow-sm text-center text-sm hover:border-blue-400 transition-colors">
+                            人工填海</div>
+                        <div id="card-water" draggable="true" data-type="human"
+                            data-desc="導致地層失去水壓支撐而往下陷，造成嚴重積水不退與土壤鹽化。"
+                            class="bg-white px-3 py-2 rounded-lg font-bold cursor-pointer border-2 border-gray-300 force-card shadow-sm text-center text-sm hover:border-blue-400 transition-colors">
+                            超抽地下水</div>
+                        <div id="card-lime" draggable="true" data-type="human"
+                            data-desc="挖空山體取得水泥原料，若未做好防護與植被恢復，極易造成大規模坍塌。"
+                            class="bg-white px-3 py-2 rounded-lg font-bold cursor-pointer border-2 border-gray-300 force-card shadow-sm text-center text-sm hover:border-blue-400 transition-colors">
+                            開採石灰岩</div>
+                        <div id="card-tree" draggable="true" data-type="human"
+                            data-desc="在裸露地表種植樹木，植物根系可緊緊抓住土壤，減緩流水侵蝕，保護地表。"
+                            class="bg-white px-3 py-2 rounded-lg font-bold cursor-pointer border-2 border-gray-300 force-card shadow-sm text-center text-sm hover:border-blue-400 transition-colors">
+                            人工造林</div>
+                    </div>
+
+                    <div class="mt-auto pt-4 border-t-2 border-blue-200 min-h-[110px]">
+                        <h4 class="text-base font-bold text-blue-800 mb-2"><i class="fas fa-info-circle"></i> 影響說明</h4>
+                        <p id="force-description"
+                            class="text-base text-gray-700 font-medium leading-relaxed tracking-wide">
+                            請點選或將游標移至卡片上。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="screen-level-2" class="screen max-w-5xl mx-auto flex flex-col">
+
+            <div
+                class="flex flex-col md:flex-row md:justify-between md:items-end border-b-4 border-cyan-500 pb-2 mb-4 gap-4 shrink-0">
+                <h2 class="text-2xl font-bold text-cyan-800"><i class="fas fa-water mr-2"></i>水神雕刻坊</h2>
+                <div class="flex gap-2">
+                    <button onclick="switchTabL2(1)" id="tab-l2-btn-1"
+                        class="bg-cyan-500 text-white px-4 py-2 rounded-t-lg font-bold transition">任務
+                        2-1：造山流水實驗</button>
+                    <button onclick="switchTabL2(2)" id="tab-l2-btn-2"
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-600 px-4 py-2 rounded-t-lg font-bold transition shadow-inner">任務
+                        2-2：河流與海岸</button>
+                </div>
+            </div>
+
+            <div id="task-2-1" class="bg-white rounded-b-xl rounded-tl-xl p-6 shadow-md mb-6 flex-1">
+                <h3 class="text-xl font-bold mb-4 text-gray-700">任務 2-1：造山流水實驗室</h3>
+                <p class="mb-4">調整土堆的坡度，觀察水流三大作用（侵蝕、搬運、堆積）的變化！</p>
+
+                <div class="bg-cyan-50 p-6 rounded-lg text-center mb-4">
+                    <div class="flex flex-col md:flex-row items-end justify-start mb-4 h-48 border-b-4 border-yellow-700 pb-[2px] relative overflow-hidden bg-white rounded-lg border-2 border-cyan-200"
+                        id="simulation-area">
+                        <div id="mountain-shape"
+                            class="w-0 h-0 border-solid border-b-[80px] border-b-amber-700 transition-all duration-300 z-10 shrink-0"
+                            style="border-left-width: 60px; border-left-color: transparent; border-right-width: 100px; border-right-color: transparent;">
+                        </div>
+                        <div class="flex-1 h-full relative" id="river-bed">
+                            <div
+                                class="absolute bottom-0 left-0 h-full w-0 border-l-2 border-dashed border-gray-300 z-0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center gap-3 mt-6 mb-2">
+                        <button id="btn-slope-1" onclick="updateSlope(1)"
+                            class="px-4 py-2 rounded-lg font-bold bg-blue-500 text-white shadow transition-colors">坡度平緩</button>
+                        <button id="btn-slope-2" onclick="updateSlope(2)"
+                            class="px-4 py-2 rounded-lg font-bold bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors">坡度一般</button>
+                        <button id="btn-slope-3" onclick="updateSlope(3)"
+                            class="px-4 py-2 rounded-lg font-bold bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors">坡度陡峭</button>
+                    </div>
+
+                    <button onclick="playWaterFlow()"
+                        class="mt-4 bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-6 rounded-full shadow-md transition-transform transform hover:scale-105 flex items-center justify-center mx-auto gap-2">
+                        <i class="fas fa-fill-drip"></i> 倒水測試，觀察搬運與堆積！
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-3 gap-2 text-center">
+                    <div class="bg-red-100 p-2 rounded"><span class="font-bold text-red-600">侵蝕作用</span><br><span
+                            id="eff-erosion" class="text-sm">較弱</span></div>
+                    <div class="bg-yellow-100 p-2 rounded"><span class="font-bold text-yellow-600">搬運作用</span><br><span
+                            id="eff-transport" class="text-sm">較弱</span></div>
+                    <div class="bg-green-100 p-2 rounded"><span class="font-bold text-green-600">堆積作用</span><br><span
+                            id="eff-deposit" class="text-sm">較強</span></div>
+                </div>
+                <p class="mt-4 text-sm text-gray-600 bg-gray-100 p-3 rounded">💡 結論：坡度越陡，水流速度越快，<span
+                        class="font-bold">侵蝕與搬運</span>作用越強，溝紋較深；坡度越緩，水流越慢，<span class="font-bold">堆積</span>作用較強。</p>
+            </div>
+
+            <div id="task-2-2"
+                class="hidden bg-white rounded-b-xl rounded-tl-xl p-6 shadow-md flex-1 flex flex-col min-h-[500px]">
+
+                <div class="flex justify-between items-center mb-4 border-b-2 border-gray-200 pb-2 shrink-0">
+                    <h3 class="text-xl font-bold text-gray-700" id="terrain-title">🏞️ 河流地形圖鑑</h3>
+                    <button onclick="toggleTerrainMode()" id="btn-toggle-terrain"
+                        class="bg-cyan-100 hover:bg-cyan-200 text-cyan-800 px-4 py-2 rounded-full font-bold shadow-sm transition flex items-center gap-2">
+                        切換至海岸地形 <i class="fas fa-exchange-alt"></i>
+                    </button>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-6 flex-1">
+
+                    <div class="w-full md:w-3/5 relative bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden min-h-[300px]"
+                        id="main-map-container">
+
+                        <img id="main-map-image" src="earth-rockimages/river-main.png"
+                            class="absolute inset-0 w-full h-full object-cover z-0 opacity-90">
+
+                        <div id="hotspots-river" class="absolute inset-0 z-10">
+                            <button onclick="showTerrainDetail('river', 'up')"
+                                class="hotspot absolute top-[20%] left-[12%] bg-red-500 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold shadow-lg border-2 border-white hover:scale-110 transition z-20">上游</button>
+                            <button onclick="showTerrainDetail('river', 'mid')"
+                                class="hotspot absolute top-[75%] left-[50%] bg-green-500 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold shadow-lg border-2 border-white hover:scale-110 transition z-20">中游</button>
+                            <button onclick="showTerrainDetail('river', 'down')"
+                                class="hotspot absolute bottom-[60%] right-[25%] bg-blue-500 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold shadow-lg border-2 border-white hover:scale-110 transition z-20">下游</button>
+                        </div>
+
+                        <div id="hotspots-coast" class="absolute inset-0 z-10 hidden">
+                            <button onclick="showTerrainDetail('coast', 'erosion')"
+                                class="hotspot absolute top-[25%] left-[33%] bg-purple-500 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold shadow-lg border-2 border-white hover:scale-110 transition z-20">侵蝕</button>
+                            <button onclick="showTerrainDetail('coast', 'deposit')"
+                                class="hotspot absolute bottom-[65%] right-[30%] bg-yellow-500 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold shadow-lg border-2 border-white hover:scale-110 transition z-20">堆積</button>
+                        </div>
+                    </div>
+
+                    <div class="w-full md:w-2/5 bg-gray-50 rounded-lg p-6 flex flex-col border border-gray-200 shadow-inner"
+                        id="detail-panel">
+
+                        <div class="text-center text-gray-500 m-auto" id="detail-placeholder">
+                            <i class="fas fa-hand-pointer text-4xl mb-3 animate-bounce"></i>
+                            <p class="font-bold">請點擊左側地圖上的標記<br>查看詳細地形解說</p>
+                        </div>
+
+                        <div id="detail-content" class="hidden h-full flex flex-col">
+                            <h4 id="detail-title"
+                                class="text-2xl font-bold text-gray-800 mb-2 border-b-4 pb-2 transition-colors">標題</h4>
+
+                            <div
+                                class="flex-1 my-4 bg-white rounded-lg overflow-hidden shadow-sm border border-gray-200 relative min-h-[200px]">
+                                <img id="detail-image" src="" alt="地形細節"
+                                    class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300">
+                            </div>
+
+                            <p id="detail-desc"
+                                class="text-gray-700 leading-relaxed bg-white p-4 rounded-lg shadow-sm border border-gray-100 text-base">
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="screen-level-3" class="screen max-w-5xl mx-auto flex flex-col">
+            <div
+                class="flex flex-col md:flex-row md:justify-between md:items-end border-b-4 border-amber-500 pb-2 mb-4 gap-4 shrink-0">
+                <h2 class="text-2xl font-bold text-amber-800"><i class="fas fa-gem mr-2"></i>尋寶礦坑與化石谷</h2>
+                <div class="flex gap-2">
+                    <button onclick="switchTabL3(1)" id="tab-l3-btn-1"
+                        class="bg-amber-500 text-white px-4 py-2 rounded-t-lg font-bold transition">任務 3-1：岩石分類</button>
+                    <button onclick="switchTabL3(2)" id="tab-l3-btn-2"
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-600 px-4 py-2 rounded-t-lg font-bold transition shadow-inner">任務
+                        3-2：礦物特徵</button>
+                    <button onclick="switchTabL3(3)" id="tab-l3-btn-3"
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-600 px-4 py-2 rounded-t-lg font-bold transition shadow-inner">任務
+                        3-3：化石祕密</button>
+                </div>
+            </div>
+
+            <div id="task-3-1"
+                class="bg-white rounded-b-xl rounded-tl-xl p-6 shadow-md flex-1 flex flex-col min-h-[520px]">
+
+                <div
+                    class="flex flex-col sm:flex-row justify-between items-center mb-6 border-b-2 border-gray-100 pb-4 gap-4">
+                    <h3 class="text-xl font-bold text-gray-700">🪨 岩石分類鑑定</h3>
+                    <div class="flex gap-2 bg-amber-50 p-1 rounded-lg shadow-inner">
+                        <button onclick="showRockDetail('igneous')"
+                            class="px-4 py-2 rounded-md font-bold text-sm transition hover:bg-red-500 hover:text-white text-red-800 bg-white shadow-sm border border-red-200">火成岩</button>
+                        <button onclick="showRockDetail('sedimentary')"
+                            class="px-4 py-2 rounded-md font-bold text-sm transition hover:bg-blue-500 hover:text-white text-blue-800 bg-white shadow-sm border border-blue-200">沉積岩</button>
+                        <button onclick="showRockDetail('metamorphic')"
+                            class="px-4 py-2 rounded-md font-bold text-sm transition hover:bg-purple-500 hover:text-white text-purple-800 bg-white shadow-sm border border-purple-200">變質岩</button>
+                    </div>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-8 flex-1">
+                    <div
+                        class="w-full md:w-1/2 relative bg-gray-100 rounded-2xl overflow-hidden border-2 border-dashed border-gray-300 min-h-[250px] flex items-center justify-center">
+                        <div id="rock-placeholder-img" class="text-gray-400 text-center p-4">
+                            <i class="fas fa-mountain text-5xl mb-3 animate-pulse"></i>
+                            <p>請選擇上方岩石類別</p>
+                        </div>
+                        <img id="rock-main-img" src=""
+                            class="hidden absolute inset-0 w-full h-full object-cover transition-opacity duration-500">
+                    </div>
+
+                    <div class="w-full md:w-1/2 flex flex-col justify-start">
+                        <div id="rock-info-content" class="hidden flex flex-col h-full">
+                            <h4 id="rock-type-title" class="text-2xl font-black mb-3">類型名稱</h4>
+                            <p id="rock-type-origin"
+                                class="text-gray-700 leading-relaxed mb-4 bg-amber-50 p-4 rounded-xl border-l-4 border-amber-400">
+                                這裡會顯示該岩石的成因說明。
+                            </p>
+
+                            <div class="mb-4 shrink-0">
+                                <h5 class="font-bold text-gray-600 mb-3"><i
+                                        class="fas fa-search-location mr-2"></i>點擊觀察常見範例：</h5>
+                                <div id="rock-example-list" class="flex flex-wrap gap-2">
+                                </div>
+                            </div>
+
+                            <div id="rock-example-detail"
+                                class="hidden mt-6 bg-white rounded-xl border-2 border-gray-200 shadow-sm overflow-hidden flex flex-col sm:flex-row animate-[fadeIn_0.3s_ease-in-out]">
+                                <div
+                                    class="w-full sm:w-2/5 bg-gray-100 relative min-h-[180px] flex items-center justify-center border-b sm:border-b-0 sm:border-r border-gray-200">
+                                    <i class="fas fa-image text-4xl text-gray-300"></i>
+                                    <img id="rock-ex-img" src="" alt="範例圖片"
+                                        class="absolute inset-0 w-full h-full object-cover z-10 transition-opacity duration-300"
+                                        style="opacity: 0;" onload="this.style.opacity='1'"
+                                        onerror="this.style.opacity='0'">
+                                </div>
+                                <div class="p-5 w-full sm:w-3/5 flex flex-col justify-center bg-gray-50">
+                                    <h5 id="rock-ex-title" class="text-xl font-bold mb-3">範例名稱</h5>
+                                    <p id="rock-ex-desc" class="text-base text-gray-700 leading-relaxed">這裡會顯示範例說明。</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="rock-info-placeholder"
+                            class="m-auto text-center text-gray-400 h-full flex flex-col items-center justify-center">
+                            <i class="fas fa-hand-pointer text-4xl mb-2 animate-bounce"></i>
+                            <p>點擊上方按鈕開始鑑定</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="task-3-2"
+                class="hidden bg-white rounded-b-xl rounded-tl-xl p-6 shadow-md flex-1 flex flex-col gap-8 min-h-[600px]">
+
+                <div class="flex flex-col md:flex-row gap-6 bg-amber-50/50 p-4 rounded-xl border border-amber-100">
+                    <div
+                        class="w-full md:w-1/3 bg-white rounded-xl flex items-center justify-center border-2 border-dashed border-gray-300 h-[220px] relative overflow-hidden shadow-inner shrink-0">
+                        <div id="mohs-img-placeholder"
+                            class="text-gray-400 text-center z-10 flex flex-col items-center">
+                            <i class="fas fa-gem text-4xl mb-2 opacity-50"></i>
+                            <span>無圖片素材</span>
+                        </div>
+                        <img id="mohs-img" src="" alt="礦物圖片"
+                            class="absolute inset-0 w-full h-full object-cover z-20 transition-opacity duration-300"
+                            style="opacity: 0;">
+                    </div>
+
+                    <div class="w-full md:w-2/3 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-3 mb-2">
+                                <span id="mohs-level-badge"
+                                    class="bg-amber-500 text-white px-3 py-1 rounded-full font-bold text-sm shadow-sm">硬度
+                                    1</span>
+                                <h4 id="mohs-title" class="text-2xl font-black text-gray-800">滑石</h4>
+                            </div>
+                            <p id="mohs-desc"
+                                class="text-gray-700 leading-relaxed bg-white p-4 rounded-lg border-l-4 border-amber-400 shadow-sm min-h-[90px]">
+                                說明文字載入中...
+                            </p>
+                        </div>
+
+                        <div class="mt-4 bg-white p-3 rounded-lg shadow-sm border border-gray-100">
+                            <p class="text-sm text-gray-500 mb-2 font-bold"><i class="fas fa-hand-pointer mr-1"></i>
+                                左右拖曳滑桿觀察硬度變化 (1 最軟 ~ 10 最硬)</p>
+                            <input type="range" min="1" max="14" value="1"
+                                class="w-full cursor-pointer accent-amber-500" id="mohs-slider"
+                                oninput="updateMohs(this.value)">
+                            <div class="flex justify-between text-xs text-gray-400 mt-1 px-1 font-bold">
+                                <span>最軟</span>
+                                <span>最硬</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-gray-50 border-2 border-gray-200 rounded-xl p-6 flex flex-col items-center shadow-inner relative w-full mt-4">
+
+                    <div class="flex flex-wrap items-center justify-between mb-4 border-b pb-2 w-full">
+                        <div class="flex items-center gap-3">
+                            <h4 class="text-xl font-bold text-gray-800"><i
+                                    class="fas fa-khanda text-red-500 mr-2"></i>礦物硬度 PK 賽</h4>
+                            <span id="pk-round-indicator"
+                                class="bg-blue-100 text-blue-700 px-3 py-1 rounded-lg font-black text-sm">第 1 / 5
+                                題</span>
+                            <span id="pk-header-feedback" class="font-black text-lg transition-all duration-300"></span>
+                        </div>
+
+                        <button id="pk-restart-btn" onclick="startPKGame()"
+                            class="hidden bg-blue-600 text-white px-4 py-1.5 rounded-full font-bold shadow-sm hover:bg-blue-700 transition flex items-center gap-2 text-sm shrink-0">
+                            <i class="fas fa-redo"></i> 重新挑戰
+                        </button>
+                    </div>
+
+                    <p
+                        class="text-gray-600 text-sm mb-6 bg-white px-4 py-1 rounded-full shadow-sm border border-gray-200 text-center">
+                        請點擊下方，選出<span class="text-red-500 font-bold mx-1">硬度較高（較硬）</span>的物件！
+                    </p>
+
+                    <div class="flex items-stretch justify-center gap-4 md:gap-12 w-full max-w-2xl relative">
+                        <button id="pk-btn-a" onclick="checkPKAnswer('A')"
+                            class="flex-1 bg-white border-4 border-gray-300 rounded-xl p-4 md:p-6 flex items-center justify-center hover:border-blue-400 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 cursor-pointer min-h-[100px]">
+                            <span id="pk-name-a" class="font-bold text-lg md:text-xl text-gray-700">載入中...</span>
+                        </button>
+                        <div
+                            class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red-500 text-white font-black italic text-xl rounded-full w-10 h-10 flex items-center justify-center shadow-xl border-4 border-white z-20">
+                            VS</div>
+                        <button id="pk-btn-b" onclick="checkPKAnswer('B')"
+                            class="flex-1 bg-white border-4 border-gray-300 rounded-xl p-4 md:p-6 flex items-center justify-center hover:border-blue-400 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 cursor-pointer min-h-[100px]">
+                            <span id="pk-name-b" class="font-bold text-lg md:text-xl text-gray-700">載入中...</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="pk-result-area" class="mt-6 flex flex-col items-center hidden w-full">
+                    <div class="w-full h-px bg-gray-300 mb-4"></div>
+                    <p id="pk-result-text" class="text-lg font-bold mb-3"></p>
+                    <button onclick="startPKRound()"
+                        class="bg-blue-600 text-white px-8 py-2 rounded-full font-bold shadow-md hover:bg-blue-700 hover:shadow-lg transform transition hover:scale-105 active:scale-95 flex items-center gap-2">
+                        <i class="fas fa-redo"></i> 再玩一次
+                    </button>
+                </div>
+            </div>
+            </div>
+
+            <div id="task-3-3"
+                class="hidden bg-white rounded-b-xl rounded-tl-xl p-6 shadow-md flex-1 flex flex-col min-h-[500px]">
+
+                <div
+                    class="flex flex-col md:flex-row justify-between items-center border-b-2 border-gray-100 pb-4 mb-6 shrink-0">
+                    <div class="flex items-center gap-4 mb-4 md:mb-0">
+                        <h3 id="subtask-3-3-title" class="text-xl font-bold text-gray-700">⏳ 化石形成時光機</h3>
+                        <button id="btn-reset-dig" onclick="resetDigGame()"
+                            class="hidden bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-1 rounded-full text-sm font-bold transition">
+                            <i class="fas fa-redo mr-1"></i>重新掩埋
+                        </button>
+                    </div>
+                    <div class="flex justify-end gap-4">
+                        <button onclick="switchSubTabL3(1)" id="subtab-btn-1"
+                            class="bg-orange-500 text-white px-6 py-2 rounded-full font-bold shadow-md hover:bg-orange-600 transition transform hover:scale-105">
+                            <i class="fas fa-hourglass-half mr-2"></i>化石誕生
+                        </button>
+                        <button onclick="switchSubTabL3(2)" id="subtab-btn-2"
+                            class="bg-gray-100 text-gray-600 px-6 py-2 rounded-full font-bold border-2 border-gray-200 hover:bg-gray-200 transition transform hover:scale-105">
+                            <i class="fas fa-search mr-2"></i>化石獵人
+                        </button>
+                    </div>
+                </div>
+
+                <div id="subtask-3-3-1" class="flex-1 flex flex-col animate-[fadeIn_0.3s_ease-in-out]">
+                    <p class="text-sm text-gray-600 mb-4 bg-orange-50 p-3 rounded-lg border-l-4 border-orange-400">
+                        化石的形成非常不容易！推動右方的時光拉桿，觀察古生物是如何經過漫長歲月變成化石的吧！
+                    </p>
+
+                    <div class="flex flex-col md:flex-row gap-8 min-h-[350px] flex-1 w-full">
+                        <div
+                            class="w-full md:w-2/3 relative bg-gray-200 border-2 border-gray-300 rounded-lg overflow-hidden flex items-center justify-center min-h-[350px] shadow-inner">
+                            <div
+                                class="absolute top-4 left-4 z-30 bg-white/95 px-5 py-3 rounded-xl shadow-md border-2 border-gray-200 max-w-[80%] pointer-events-none transition-all">
+                                <h4 id="fossil-stage-title" class="text-lg font-bold text-sky-900 mb-1">1. 古生物死亡</h4>
+                                <p id="fossil-stage-desc" class="text-sm text-gray-700">恐龍倒在河川、湖泊邊緣或海洋中。</p>
+                            </div>
+                            <img id="fossil-display-img" src="earth-rockimages/dinosaur1.png" alt="化石形成階段"
+                                class="absolute inset-0 w-full h-full object-cover z-10 transition-opacity duration-300">
+                        </div>
+
+                        <div
+                            class="w-full md:w-1/3 flex flex-col justify-center items-center bg-gray-50 rounded-lg border-2 border-dashed border-gray-300 p-4 shrink-0">
+                            <h3 class="text-lg font-bold text-gray-700 mb-2 text-center"><i
+                                    class="fas fa-clock mr-2"></i>時間推演器</h3>
+                            <p class="text-xs text-gray-500 mb-8 text-center">請由下往上推動拉桿</p>
+                            <div class="flex h-[200px] items-center justify-center gap-6 pl-2 w-full">
+                                <div class="relative h-full w-8 flex items-center justify-center">
+                                    <input type="range" min="1" max="4" value="1"
+                                        class="absolute origin-center -rotate-90 cursor-pointer accent-orange-500 z-50"
+                                        style="width: 200px;" id="fossil-time-slider"
+                                        oninput="updateFossilTimeMachine(this.value)">
+                                </div>
+                                <div
+                                    class="flex flex-col justify-between h-full text-sm font-bold text-gray-500 py-[4px]">
+                                    <span>4. 重見天日</span>
+                                    <span>3. 石化作用</span>
+                                    <span>2. 泥沙掩埋</span>
+                                    <span>1. 生物死亡</span>
+                                </div>
+                            </div>
+                            <div class="mt-6 w-full">
+                                <button onclick="showFossilExtraInfo()"
+                                    class="w-full bg-amber-100 hover:bg-amber-200 text-amber-800 font-bold py-3 px-4 rounded-xl shadow-sm border-2 border-amber-300 flex justify-center items-center transition-all duration-300 active:scale-95 gap-2">
+                                    <i class="fas fa-question-circle text-amber-600 animate-pulse"></i>
+                                    <span>所有的恐龍都能變成化石嗎？</span>
+                                    <i class="fas fa-external-link-alt text-amber-500 opacity-70 ml-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="subtask-3-3-2" class="hidden flex-1 flex flex-col animate-[fadeIn_0.3s_ease-in-out]">
+                    <p
+                        class="text-sm text-gray-600 mb-4 bg-orange-50 p-3 rounded-lg border-l-4 border-orange-400 shrink-0">
+                        拿起你的考古刷！請在下方的泥土區<span class="font-bold text-orange-700">按住滑鼠並拖曳（或手指滑動）</span>，輕輕刷開泥土，看看底下藏著什麼化石！
+                    </p>
+
+                    <div class="flex flex-col md:flex-row gap-6 flex-1 w-full">
+
+                        <div class="w-full md:w-1/3 flex flex-col gap-3 shrink-0">
+                            <div
+                                class="bg-orange-50 border-2 border-orange-200 p-4 rounded-xl text-center shadow-sm transition hover:bg-orange-100">
+                                <div class="text-3xl mb-1">🦟</div>
+                                <h4 class="font-bold text-orange-800 mb-1">實體化石</h4>
+                                <p class="text-xs text-gray-700 leading-relaxed">生物的骨骼、牙齒或被樹脂包覆的遺骸，保留了原有的真實形體。</p>
+                            </div>
+                            <div
+                                class="bg-orange-50 border-2 border-orange-200 p-4 rounded-xl text-center shadow-sm transition hover:bg-orange-100">
+                                <div class="text-3xl mb-1">🐚</div>
+                                <h4 class="font-bold text-orange-800 mb-1">印模化石</h4>
+                                <p class="text-xs text-gray-700 leading-relaxed">生物遺體腐爛後消失，但在岩漿或泥沙中留下了立體的凹陷壓痕。</p>
+                            </div>
+                            <div
+                                class="bg-orange-50 border-2 border-orange-200 p-4 rounded-xl text-center shadow-sm transition hover:bg-orange-100">
+                                <div class="text-3xl mb-1">🐾</div>
+                                <h4 class="font-bold text-orange-800 mb-1">痕跡化石</h4>
+                                <p class="text-xs text-gray-700 leading-relaxed">生物活動時留下來的腳印、爬痕，或者是糞便變成石頭的產物。</p>
+                            </div>
+                        </div>
+
+                        <div
+                            class="w-full md:w-2/3 flex flex-col items-center justify-center bg-gray-100 rounded-xl border-4 border-gray-300 p-4 relative">
+
+                            <div class="relative w-full max-w-[480px] aspect-[4/3] bg-white rounded-lg overflow-hidden shadow-inner cursor-crosshair border-2 border-dashed border-gray-400"
+                                id="dig-container">
+
+                                <img id="fossil-hidden-img" src="earth-rockimages/ex-basalt.png" alt="隱藏的化石"
+                                    class="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none opacity-0 transition-opacity duration-300">
+
+                                <div id="dig-success-overlay"
+                                    class="hidden absolute inset-0 z-10 flex items-center justify-center pointer-events-none bg-black/10">
+                                    <span
+                                        class="bg-white/95 px-6 py-3 rounded-full font-black text-amber-600 text-3xl shadow-xl border-4 border-white animate-bounce">挖到化石了！</span>
+                                </div>
+
+                                <canvas id="dig-canvas" class="absolute inset-0 w-full h-full z-20 touch-none"></canvas>
+                            </div>
+
+                            <div class="w-full max-w-[480px] mt-4 flex items-center gap-3">
+                                <span class="text-sm font-bold text-gray-600 shrink-0">挖掘進度：</span>
+                                <div class="flex-1 bg-gray-200 h-4 rounded-full overflow-hidden border border-gray-300">
+                                    <div id="dig-progress-bar"
+                                        class="bg-orange-500 h-full w-0 transition-all duration-300"></div>
+                                </div>
+                                <span id="dig-progress-text"
+                                    class="text-sm font-bold text-orange-600 w-12 text-right">0%</span>
+                            </div>
+
+                            <div id="dig-result-panel"
+                                class="hidden absolute inset-0 z-30 bg-white/95 flex flex-col items-center justify-center p-6 backdrop-blur-sm transition-opacity duration-500 rounded-xl">
+                                <h4 class="text-3xl mb-2 animate-bounce">🎉</h4>
+                                <h4 class="text-2xl font-black text-amber-800 mb-2">鑑定時間！</h4>
+                                <p class="text-lg text-gray-700 mb-6">你發現了：<span id="dug-fossil-name"
+                                        class="font-bold text-red-600 border-b-4 border-red-200 pb-1 text-xl px-1">???</span>
+                                </p>
+
+                                <p class="text-sm text-gray-500 mb-4 font-bold bg-amber-50 px-4 py-1 rounded-full"><i
+                                        class="fas fa-microscope mr-1"></i> 請參考左側說明，它屬於哪一種？</p>
+
+                                <div class="flex flex-wrap justify-center gap-3 w-full px-4">
+                                    <button onclick="checkFossilCategory('實體化石')"
+                                        class="flex-1 min-w-[100px] bg-white hover:bg-orange-100 border-2 border-orange-300 text-orange-800 py-2 rounded-xl font-bold transition transform hover:scale-105 shadow-sm">實體化石</button>
+                                    <button onclick="checkFossilCategory('印模化石')"
+                                        class="flex-1 min-w-[100px] bg-white hover:bg-orange-100 border-2 border-orange-300 text-orange-800 py-2 rounded-xl font-bold transition transform hover:scale-105 shadow-sm">印模化石</button>
+                                    <button onclick="checkFossilCategory('痕跡化石')"
+                                        class="flex-1 min-w-[100px] bg-white hover:bg-orange-100 border-2 border-orange-300 text-orange-800 py-2 rounded-xl font-bold transition transform hover:scale-105 shadow-sm">痕跡化石</button>
+                                </div>
+                                <div id="fossil-feedback"
+                                    class="mt-4 text-lg font-bold h-8 flex items-center justify-center w-full text-center">
+                                </div>
+                                <button id="btn-next-dig" onclick="resetDigGame()"
+                                    class="hidden mt-2 bg-blue-500 hover:bg-blue-600 text-white px-8 py-2 rounded-full font-bold shadow-md transition transform hover:-translate-y-1">
+                                    <i class="fas fa-arrow-right mr-2"></i>繼續挖掘
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </section>
+
+        <section id="screen-level-4" class="screen max-w-5xl mx-auto flex flex-col">
+            <div
+                class="flex flex-col md:flex-row md:justify-between md:items-end border-b-4 border-red-500 pb-2 mb-4 gap-4 shrink-0">
+                <h2 class="text-2xl font-bold text-red-800"><i class="fas fa-shield-alt mr-2"></i>守護者基地</h2>
+                <div class="flex gap-2">
+                    <button onclick="switchTabL4(1)" id="tab-l4-btn-1"
+                        class="bg-red-500 text-white px-4 py-2 rounded-t-lg font-bold transition">任務 4-1：地震解密</button>
+                    <button onclick="switchTabL4(2)" id="tab-l4-btn-2"
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-600 px-4 py-2 rounded-t-lg font-bold transition shadow-inner">任務
+                        4-2：避難準備</button>
+                    <button onclick="switchTabL4(3)" id="tab-l4-btn-3"
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-600 px-4 py-2 rounded-t-lg font-bold transition shadow-inner">任務
+                        4-3：地景保育</button>
+                </div>
+            </div>
+
+            <div id="subtask-4-1"
+                class="bg-white rounded-b-xl rounded-tl-xl p-6 shadow-md flex-1 flex flex-col min-h-[500px] relative">
+
+                <div id="earthquake-lock-screen"
+                    class="absolute inset-0 z-20 bg-red-50 rounded-xl flex flex-col items-center justify-center p-6">
+                    <h3 class="text-2xl font-black text-red-700 mb-2"><i
+                            class="fas fa-exclamation-triangle animate-pulse mr-2"></i>地震警報響起！</h3>
+                    <p class="text-gray-700 font-bold mb-6 text-center">要進入解密中心，請先從下方選出正確的<span
+                            class="text-red-600 text-xl mx-1">「保命 3 步驟」</span>：</p>
+
+                    <div class="flex gap-4 mb-6">
+                        <div id="step-light-1"
+                            class="w-12 h-12 rounded-full bg-gray-300 border-4 border-white shadow-inner flex items-center justify-center text-gray-400 font-bold text-xl transition-colors">
+                            1</div>
+                        <div id="step-light-2"
+                            class="w-12 h-12 rounded-full bg-gray-300 border-4 border-white shadow-inner flex items-center justify-center text-gray-400 font-bold text-xl transition-colors">
+                            2</div>
+                        <div id="step-light-3"
+                            class="w-12 h-12 rounded-full bg-gray-300 border-4 border-white shadow-inner flex items-center justify-center text-gray-400 font-bold text-xl transition-colors">
+                            3</div>
+                    </div>
+
+                    <div id="safety-options-grid" class="grid grid-cols-2 md:grid-cols-5 gap-3 w-full max-w-4xl">
+                    </div>
+                </div>
+
+                <div id="earthquake-main-content" class="hidden flex-1 flex flex-col md:flex-row gap-6">
+                    <div
+                        class="w-full md:w-1/2 flex flex-col bg-gray-100 rounded-xl border-4 border-gray-300 p-4 relative overflow-hidden flex-1">
+                        <h4 class="font-bold text-gray-700 mb-2 text-center border-b-2 border-gray-300 pb-2">📡 氣象署地震報告
+                        </h4>
+
+                        <div class="relative w-full h-full min-h-[300px] bg-white rounded-lg shadow-inner overflow-hidden"
+                            id="report-container">
+                            <img id="report-img" src="earth-rockimages/eq-report.png" alt="地震報告"
+                                class="absolute inset-0 w-full h-full object-contain">
+
+                            <div id="stain-layer" class="absolute inset-0 z-10">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="w-full md:w-1/2 flex flex-col gap-4">
+                        <div class="bg-red-50 p-4 rounded-xl border-l-4 border-red-500 shadow-sm shrink-0">
+                            <h4 class="font-bold text-red-700 mb-1">任務指示：</h4>
+                            <p class="text-sm text-gray-700">報告上有幾處被污漬遮住了！請觀察左邊閃爍的污漬位置，並在下方點選對應的正確專有名詞。</p>
+                        </div>
+
+                        <div id="report-question-area"
+                            class="bg-white border-2 border-dashed border-red-300 p-6 rounded-xl flex-1 flex flex-col items-center justify-center text-center">
+                            <div class="text-gray-400 mb-4">
+                                <i class="fas fa-hand-pointer text-4xl mb-2 animate-bounce"></i>
+                                <p class="font-bold">請先點擊左側閃爍的污漬</p>
+                            </div>
+                            <div id="report-options" class="hidden w-full flex flex-wrap justify-center gap-3"></div>
+                        </div>
+
+                        <div id="report-feedback-area" class="hidden bg-blue-50 p-4 rounded-xl border border-blue-200">
+                            <h5 id="report-term-title" class="text-xl font-bold text-blue-800 mb-2">專有名詞</h5>
+                            <p id="report-term-desc" class="text-sm text-gray-700 leading-relaxed">這裡會顯示該名詞的詳細說明。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="subtask-4-2"
+                class="hidden bg-white rounded-b-xl rounded-tl-xl p-6 shadow-md flex-1 flex-col relative min-h-[500px]">
+
+                <div id="bag-game-area" class="flex flex-col h-full animate-[fadeIn_0.3s_ease-in-out]">
+                    <h3 class="text-xl font-bold text-gray-700 mb-2 text-center">🎒 緊急避難包整理大挑戰</h3>
+                    <p class="text-center text-sm text-gray-600 mb-4">地震隨時可能發生，請從右方選出 <span
+                            class="text-red-500 font-bold text-lg">8 件</span> 最重要的生存物資放入背包中！<br>（點擊物品即可放入或拿出）</p>
+
+                    <div class="flex flex-col md:flex-row gap-6 flex-1">
+                        <div
+                            class="w-full md:w-1/3 bg-orange-50 border-4 border-dashed border-orange-400 rounded-xl p-4 flex flex-col items-center relative">
+                            <h4
+                                class="font-black text-orange-800 mb-3 text-lg border-b-2 border-orange-200 pb-1 w-full text-center">
+                                我的避難包 (<span id="bag-count" class="text-red-600 text-xl">0</span>/8)</h4>
+
+                            <div id="bag-zone"
+                                class="grid grid-cols-2 gap-2 w-full flex-1 overflow-y-auto content-start p-1">
+                            </div>
+
+                            <button id="btn-check-bag" onclick="checkBag()"
+                                class="hidden mt-4 w-full bg-orange-500 text-white font-black py-3 px-6 rounded-xl shadow-md hover:bg-orange-600 transition transform hover:-translate-y-1">
+                                <i class="fas fa-search mr-2"></i>完成整理，檢查背包！
+                            </button>
+                        </div>
+
+                        <div class="w-full md:w-2/3 bg-gray-50 border-2 border-gray-200 rounded-xl p-4 flex flex-col">
+                            <h4 class="font-bold text-gray-700 mb-3 text-center">🏠 家裡的物品 (共 15 樣)</h4>
+                            <div id="items-pool" class="grid grid-cols-2 sm:grid-cols-3 gap-3 flex-1 content-start">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="family-card-screen"
+                    class="hidden absolute inset-0 bg-white/95 z-30 flex flex-col items-center justify-center p-6 rounded-xl backdrop-blur-sm">
+                    <h3 class="text-3xl font-black text-green-600 mb-2 animate-bounce">🎉 避難包整理滿分！</h3>
+                    <p class="text-gray-700 font-bold mb-6 text-center">你帶齊了最重要的生存物資。出發避難前，別忘了最重要的卡片：</p>
+
+                    <div
+                        class="bg-yellow-50 border-4 border-yellow-400 rounded-2xl p-6 md:p-8 max-w-lg w-full shadow-xl transform rotate-1">
+                        <div class="flex items-center justify-between border-b-4 border-yellow-200 pb-3 mb-4">
+                            <h4 class="text-2xl font-black text-yellow-800"><i class="fas fa-id-card mr-2"></i>家庭防災卡
+                            </h4>
+                            <i class="fas fa-home text-yellow-400 text-3xl"></i>
+                        </div>
+                        <ul class="space-y-4 text-gray-700 font-bold">
+                            <li class="flex items-center gap-3"><span
+                                    class="bg-yellow-200 px-3 py-1 rounded-lg">緊急集合點</span> 住家旁邊的公園</li>
+                            <li class="flex items-center gap-3"><span
+                                    class="bg-yellow-200 px-3 py-1 rounded-lg">災情通報</span> 119 或 110</li>
+                            <li class="flex items-start gap-3 flex-col sm:flex-row sm:items-center">
+                                <span
+                                    class="bg-red-100 text-red-700 border-2 border-red-300 px-3 py-1 rounded-lg">報平安留言專線</span>
+                                <span class="text-3xl font-black text-red-600 tracking-wider">1991</span>
+                            </li>
+                        </ul>
+                        <p class="mt-6 text-sm text-yellow-700 bg-yellow-100 p-3 rounded-lg leading-relaxed">
+                            💡 <b>1991 專線怎麼用？</b><br>當發生大地震，電話大塞車打不通時，可以撥打 1991，輸入親友的電話號碼進行語音留言，親友也能透過這個號碼聽到你報平安喔！
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="subtask-4-3"
+                class="hidden bg-white rounded-b-xl rounded-tl-xl p-6 shadow-md flex-1 flex-col relative min-h-[600px]">
+
+                <div
+                    class="flex flex-col md:flex-row md:justify-between md:items-end border-b-2 border-green-500 pb-2 mb-4 gap-4 shrink-0">
+                    <h3 class="text-xl font-bold text-gray-700 whitespace-nowrap"><i
+                            class="fas fa-leaf text-green-600 mr-2"></i>臺灣地景保育巡禮</h3>
+
+                    <div class="flex items-center gap-3 flex-wrap justify-end flex-1">
+                        <span id="geo-location-hint" class="text-sm text-gray-500 font-bold"><i
+                                class="fas fa-info-circle mr-1"></i>請先選擇縣市</span>
+                        <div id="geo-location-buttons" class="flex flex-wrap gap-2 justify-end"></div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-6 flex-1 animate-[fadeIn_0.3s_ease-in-out]">
+
+                    <div
+                        class="w-full md:w-1/4 flex flex-col gap-3 border-r-0 md:border-r-2 border-gray-100 pr-0 md:pr-4">
+                        <p class="text-sm text-gray-600 font-bold bg-green-50 p-2 rounded-lg text-center shadow-sm">1.
+                            選擇探險縣市：</p>
+                        <div id="geo-county-list"
+                            class="grid grid-cols-2 gap-2 overflow-y-auto pb-2 md:pb-0 max-h-[450px] content-start">
+                        </div>
+                    </div>
+
+                    <div class="w-full md:w-3/4 flex flex-col gap-4">
+
+                        <div class="flex-1 bg-gray-50 border-2 border-gray-200 rounded-xl p-6 flex flex-col items-center justify-center text-center relative overflow-hidden shadow-inner"
+                            id="geo-display-area">
+
+                            <div id="geo-placeholder"
+                                class="text-gray-400 flex flex-col items-center transition-opacity duration-300">
+                                <i class="fas fa-map-marked-alt text-6xl mb-4 animate-bounce"></i>
+                                <p class="font-bold text-lg">點選右上角查看圖片！</p>
+                            </div>
+
+                            <div id="geo-content"
+                                class="hidden w-full h-full flex flex-col animate-[fadeIn_0.5s_ease-in-out]">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    <div id="error-modal"
+        class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-[100] opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-xl shadow-2xl p-6 max-w-sm w-11/12 transform scale-95 transition-transform duration-300"
+            id="error-modal-content">
+            <div class="flex items-center justify-center w-12 h-12 rounded-full bg-red-100 mx-auto mb-4">
+                <i class="fas fa-exclamation-triangle text-red-500 text-2xl"></i>
+            </div>
+            <h3 id="error-modal-title" class="text-xl font-bold text-center text-gray-800 mb-2">哎呀，放錯囉！</h3>
+            <p id="error-modal-text" class="text-gray-600 text-center mb-6 leading-relaxed">這裡會顯示錯誤說明文字。</p>
+            <div class="flex justify-center">
+                <button onclick="closeErrorModal()"
+                    class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded-full transition-colors w-full">我知道了</button>
+            </div>
+        </div>
+    </div>
+    <script src="earth-rockscript.js"></script>
+
+    <div id="info-modal"
+        class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-[110] opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl p-6 max-w-md w-11/12 transform scale-95 transition-transform duration-300 relative"
+            id="info-modal-content">
+            <button onclick="closeInfoModal()"
+                class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+
+            <div id="info-modal-body">
+            </div>
+
+            <button onclick="closeInfoModal()"
+                class="mt-6 bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-6 rounded-full transition-colors w-full">
+                看完了解了！
+            </button>
+        </div>
+    </div>
+</body>
+
+</html>
