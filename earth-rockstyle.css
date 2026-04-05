@@ -1,0 +1,243 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap');
+
+body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background-color: #f0f9ff;
+    user-select: none;
+}
+/* 讓沒有 active 的畫面強制隱藏，避免被 flex 覆蓋 */
+.screen:not(.active) {
+    display: none !important;
+}
+.screen.active {
+    animation: fadeIn 0.5s ease-in-out;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.game-btn {
+    transition: all 0.2s;
+}
+.game-btn:hover {
+    transform: scale(1.05);
+}
+.game-btn:active {
+    transform: scale(0.95);
+}
+/* 關卡卡片樣式 */
+.level-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.level-card:hover {
+    border-color: #3b82f6;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+/* 選取狀態 */
+.selected-item {
+    border: 3px solid #f59e0b !important;
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
+    transform: scale(1.05);
+}
+/* 滑桿樣式 */
+input[type=range] {
+    -webkit-appearance: none;
+    appearance: none; /* 補上標準語法，消除編輯器錯誤 */
+    width: 100%;
+    background: transparent;
+}
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    background: #3b82f6;
+    cursor: pointer;
+    margin-top: -8px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
+input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 8px;
+    cursor: pointer;
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+/* --- 關卡二：水流與搬運動畫元素 --- */
+.particle {
+    position: absolute;
+    bottom: 0;
+    /* 使用 ease-out 讓石頭有慢慢停下來(堆積)的物理感覺 */
+    transition: transform 2s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+    z-index: 20;
+}
+.rock-big {
+    width: 28px;
+    height: 24px;
+    background-color: #6b7280; /* 灰色 */
+    border-radius: 40%;
+    border: 2px solid #4b5563;
+    box-shadow: inset -2px -2px 0 rgba(0,0,0,0.2);
+}
+.rock-small {
+    width: 14px;
+    height: 12px;
+    background-color: #9ca3af; /* 淺灰色 */
+    border-radius: 50%;
+    box-shadow: inset -1px -1px 0 rgba(0,0,0,0.2);
+}
+.sand {
+    width: 6px;
+    height: 6px;
+    background-color: #d97706; /* 泥沙色 */
+    border-radius: 50%;
+}
+.water-wave {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 30px; 
+    /* 初始寬度改為 0 */
+    width: 0%; 
+    background: linear-gradient(to right, rgba(14, 165, 233, 0.8) 0%, rgba(56, 189, 248, 0.6) 80%, rgba(125, 211, 252, 0) 100%);
+    border-top-right-radius: 60%;
+    border-bottom-right-radius: 20%;
+    /* 拿掉 transform: translateX(-100%); */
+    /* 將過場動畫對準 width */
+    transition: width 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 15;
+}
+/* 山坡上的水流 */
+.mountain-water {
+    position: absolute;
+    /* 給予漸層色，讓水流前端看起來比較深 */
+    background: linear-gradient(to right, rgba(56, 189, 248, 0.6) 0%, rgba(14, 165, 233, 0.9) 100%);
+    border-radius: 6px;
+    z-index: 12;
+    /* transition 會由 JS 動態控制，以配合不同坡度的動畫速度 */
+}
+/* --- 地形圖鑑：互動標記點呼吸燈效果 --- */
+@keyframes hotspotPulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+}
+.hotspot {
+    animation: hotspotPulse 2s infinite;
+    cursor: pointer;
+}
+/* ============================== */
+/* 曲流凹凸岸資訊彈窗動畫       */
+/* ============================== */
+
+/* 1. 動畫容器通用樣式 */
+.meander-anim-container {
+    width: 100%;
+    height: 150px;
+    background-color: #f8fafc;
+    border-radius: 0.75rem;
+    border: 2px solid #e2e8f0;
+    margin-bottom: 1rem;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 2. 河流彎道主體 (純 CSS 繪製) */
+.meander-river-bend {
+    width: 60px;
+    height: 120px;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+    border-left: 24px solid #60a5fa;
+    border-bottom-width: 24px;
+    border-bottom-style: solid;
+    border-bottom-color: #60a5fa;
+    border-bottom-left-radius: 60px;
+    position: relative;
+}
+
+/* 3. 水流方向箭頭通用樣式 */
+.meander-flow-arrow {
+    position: absolute;
+    color: #ef4444; 
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+/* 凹岸 (侵蝕) 動畫箭頭 - 快流速 (0.8s) */
+.meander-flow-arrow-erosion {
+    top: 10px;
+    left: -20px; /* 修正：標準 CSS 負值寫法 */
+    animation-name: erosionFlow;
+    animation-duration: 0.8s;
+}
+
+/* 凸岸 (堆積) 動畫箭頭 - 慢流速 (2s) */
+.meander-flow-arrow-deposit {
+    bottom: 2px; /* 修正：移除中括號 */
+    left: 8px;   /* 修正：移除中括號 */
+    color: #16a34a; 
+    animation-name: depositFlow;
+    animation-duration: 2s;
+}
+
+/* 4. 代表搬運堆積的沉積物通用樣式 */
+.meander-sediment {
+    position: absolute;
+    bottom: 24px; /* 修正：移除中括號 */
+    left: 24px;   /* 修正：移除中括號 */
+    width: 12px;
+    height: 12px;
+    background-color: #facc15; 
+    border-radius: 9999px;
+    opacity: 0;
+    filter: blur(2px);
+    animation: sedimentAppear 2s ease-out infinite;
+}
+
+/* ============================== */
+/* CSS 動畫關鍵影格定義       */
+/* ============================== */
+
+/* 凹岸侵蝕路徑動畫：水流向下急衝 */
+@keyframes erosionFlow {
+    0%   { top: 10px;  left: -20px; opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { top: 90px;  left: -20px; opacity: 0; }
+}
+
+/* 凸岸堆積路徑動畫：水流緩慢地沿彎道滑行 */
+@keyframes depositFlow {
+    0%   { bottom: 2px; left: 8px; opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { bottom: 4px; left: 40px; opacity: 0; }
+}
+
+/* 沉積物出現動畫：隨著慢流速慢慢浮現 */
+@keyframes sedimentAppear {
+    0%   { opacity: 0; transform: scale(0.5); }
+    50%  { opacity: 1; transform: scale(1.1); }
+    100% { opacity: 0.6; transform: scale(1); }
+}
+/* ============================== */
+/* 污漬專屬蠕動動畫 (不變更透明度) */
+/* ============================== */
+@keyframes stainWobble {
+    0%, 100% { transform: rotate(-2deg) scale(1); }
+    50% { transform: rotate(2deg) scale(1.05); }
+}
+.animate-stain {
+    animation: stainWobble 1.5s ease-in-out infinite;
+}
